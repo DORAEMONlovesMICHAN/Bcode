@@ -10,7 +10,7 @@ using namespace std;
 
 
 /*code by Sushanth_iitbbs*/
-/*cf profile :- Sushanth_iitbbs*/
+/*cf profile :- Janaki_vallabh*/
 
 // /* Trust the process ~Dhoni */
 
@@ -141,67 +141,45 @@ ll mex(vector<ll> const& A) {
 
 //   // If n%4 gives remainder 3
 //   return 0;
-// }
 
+#define Endl endl
+
+// thala for a reason 
 
 void solve(void){
-    ll n,m,k; cin>>n>>m>>k;
-    vll a(n),b(m); cin>>a>>b;
-    vll v1,v2;
-    int cnt = 0;
-    for (int i = 0; i < n; i++) {
-        if (a[i] == 1) {
-            cnt++;
-        } else {
-            if (cnt) {
-                v1.pb(cnt);
+    ll n; cin>>n;
+    vll a(n),b(n); cin>>a>>b;
+    vll diff(n); ll z = 0;
+    for(int i = 0;i<n;++i){
+        bool chk = false;
+        if(a[i]==0){
+            if(b[i]==0){
+                z++;
             }
-            cnt = 0;
+            else{
+               continue;
+            }
+        }
+        else {
+        ll x = __gcd(a[i],b[i]);
+        if(x != 1){
+            a[i] /= x;
+            b[i] /= x;
+        }
+        diff[i] = a[i] - b[i];
         }
     }
-    if (cnt) v1.pb(cnt);
-    
-    cnt = 0;
-    for (int i = 0; i < m; i++) {
-        if (b[i] == 1) {
-            cnt++;
-        } else {
-            if (cnt) {
-                v2.pb(cnt);
-            }
-            cnt = 0;
-        }
+    map<ll,ll>mp;
+    for(int i = 0;i<n;++i){
+        if(a[i]==0||b[i]==0) continue;
+        mp[diff[i]]++;
     }
-    if (cnt) v2.pb(cnt);
-    cnt = 0;
-    // cout<<v1<<endl; cout<<v2<<endl;
     ll ans = 0;
-    map<ll,ll>mp1,mp2;
-    for(int i = 0;i<v1.size();++i){
-        ll x = v1[i];
-        while(x){
-            mp1[x]++;
-            x--;
-        }
+    for(auto &i : mp){
+        ans = max(ans,i.second);
     }
-
-    for(int i = 0;i<v2.size();++i){
-        ll x = v2[i];
-        while(x){
-            mp2[x]++;
-            x--;
-        }
-    }
-
-    for(int i = 1;i<=k;++i){
-        if(k%i==0){
-            ll num1 = i,num2 = k/i;
-            ans += (mp1[num1]*mp2[num2]);
-        }
-    }
-    cout<<ans<<endl;   
+    cout<<ans+z<<endl;
 }
-
 
 int main(void)
 {
