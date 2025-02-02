@@ -142,44 +142,70 @@ ll mex(vector<ll> const& A) {
 //   // If n%4 gives remainder 3
 //   return 0;
 
-#define Endl endl
+#define Endl endl;
+#define x first
+#define y second
+#define pb push_back
+#define fast ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
+
 
 // thala for a reason 
 
-void solve(void){
-    ll n; cin>>n;
-    vll a(n),b(n); cin>>a>>b;
-    vll diff(n); ll z = 0;
-    for(int i = 0;i<n;++i){
-        bool chk = false;
-        if(a[i]==0){
-            if(b[i]==0){
-                z++;
-            }
-            else{
-               continue;
-            }
-        }
-        else {
-        ll x = __gcd(a[i],b[i]);
-        if(x != 1){
-            a[i] /= x;
-            b[i] /= x;
-        }
-        diff[i] = a[i] - b[i];
-        }
+// long long binpow(long long a, long long b, long long m) {
+//     a %= m;
+//     long long res = 1;
+//     while (b > 0) {
+//         if (b & 1)
+//             res = res * a % m;
+//         a = a * a % m;
+//         b >>= 1;
+//     }
+//     return res;  
+// }
+
+
+bool isprime(ll n) { 
+      if (n <= 1) return false; 
+      if (n <= 3) return true; 
+      
+      if (n % 2 == 0 || n % 3 == 0) return false; 
+      
+      for (ll i = 5; i * i <= n; i += 6) 
+        if (n % i == 0 || n % (i+2) == 0) 
+          return false; 
+      
+      return true; 
+} 
+     
+    bool prime[15000105]; 
+    void sieve(int n) { 
+      for (ll i = 0; i <= n; i++) prime[i] = 1;
+      for (ll p = 2; p * p <= n; p++) { 
+        if (prime[p] == true) { 
+          for (ll i = p * p; i <= n; i += p) 
+            prime[i] = false; 
+        } 
+      } 
+      prime[1] = prime[0] = 0;
+    } 
+     
+    vector<ll> primelist;
+    bool __primes_generated__ = 0;
+     
+    void genprimes(int n) {
+      __primes_generated__ = 1;
+      sieve(n + 1);
+      for (ll i = 2; i <= n; i++) if (prime[i]) primelist.push_back(i);
     }
-    map<ll,ll>mp;
-    for(int i = 0;i<n;++i){
-        if(a[i]==0||b[i]==0) continue;
-        mp[diff[i]]++;
-    }
-    ll ans = 0;
-    for(auto &i : mp){
-        ans = max(ans,i.second);
-    }
-    cout<<ans+z<<endl;
-}
+
+
+// void solve(void){
+//     // cout<<"thala for a reason" <<endl;
+    
+//     // cout<<"thala for a reason" <<endl;
+// }
+
 
 int main(void)
 {
@@ -187,9 +213,36 @@ int main(void)
     cin.tie(NULL);
     cout.tie(NULL);
     //77
-    ll tc; tc=1;
-    while(tc--){
-        solve();
-    }
+    // cout<<"tc -> "<<tc<<endl;
+    // thala for a reason;
+    // dogs and thala haters are not allowed;
+    genprimes(1e5+1); // this will generate primes upto n;
+    // for(auto i: primelist)
+    //     cout<<i<<" ";
+    // cout<<endl;
+        ll n,m; cin>>n>>m;
+        vector<vector<ll>>mat(n,vector<ll>(m));
+        for(int i = 0;i<n;++i){
+            for(int j = 0;j<m;++j)
+                cin>>mat[i][j];
+        }
+        ll movesR = 1e5+1; ll movesC = 1e5+1;
+        for(int i = 0;i<n;++i){
+            ll rmoves = 0;
+            for(int j = 0;j<m;++j){
+                ll lb = *lower_bound(all(primelist),mat[i][j]);
+                rmoves += (lb - mat[i][j]);
+            }
+            movesR = min(movesR,rmoves);
+        }
+        for(int j = 0;j<m;++j){
+            ll cmoves = 0;
+            for(int i = 0;i<n;++i){
+                ll lb = *lower_bound(all(primelist),mat[i][j]);
+                cmoves += (lb - mat[i][j]);
+            }
+            movesC = min(movesC,cmoves);
+        }
+        cout<< min(movesR,movesC) << endl;
     return 0;
 }
